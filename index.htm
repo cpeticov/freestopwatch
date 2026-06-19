@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Stopwatch - Simple & Accurate Online Timer</title>
+    <meta name="description" content="Free, fast, and accurate online stopwatch. Easy to use timer for sports, cooking, studying, and work. No installation required.">
+    
+    <!-- INSIRA AQUI O SCRIPT DE ATIVAÇÃO DA SUA REDE DE ANÚNCIOS (HEAD) -->
+    <!-- Exemplo: <script async src="..."></script> -->
+
+    <style>
+        /* CSS Reset e Variáveis de Cores Modernas */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between; align-items: center; padding: 20px; }
+        
+        /* Containers de Anúncios com altura fixa para evitar CLS (Penalização do Google) */
+        .ad-top { min-height: 90px; width: 100%; max-width: 728px; display: flex; justify-content: center; align-items: center; background: #1e293b; border-radius: 8px; margin-bottom: 20px; color: #64748b; font-size: 12px; border: 1px dashed #334155; }
+        .ad-bottom { min-height: 250px; width: 100%; max-width: 728px; display: flex; justify-content: center; align-items: center; background: #1e293b; border-radius: 8px; margin-top: 20px; color: #64748b; font-size: 12px; border: 1px dashed #334155; }
+
+        /* Container Principal do Cronômetro */
+        .main-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; max-width: 600px; }
+        .display { font-size: clamp(4rem, 12vw, 7rem); font-weight: 700; font-variant-numeric: tabular-nums; margin-bottom: 30px; letter-spacing: -2px; color: #38bdf8; text-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        .controls { display: flex; gap: 15px; width: 100%; justify-content: center; }
+        
+        /* Botões Estilizados e Rápidos */
+        button { padding: 15px 35px; font-size: 1.2rem; font-weight: 600; border: none; border-radius: 50px; cursor: pointer; transition: all 0.2s ease; width: 130px; outline: none; }
+        .btn-start { background-color: #10b981; color: white; }
+        .btn-start:hover { background-color: #059669; transform: translateY(-2px); }
+        .btn-stop { background-color: #ef4444; color: white; display: none; }
+        .btn-stop:hover { background-color: #dc2626; transform: translateY(-2px); }
+        .btn-reset { background-color: #475569; color: #cbd5e1; }
+        .btn-reset:hover { background-color: #334155; transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+
+        /* Texto de SEO Otimizado no rodapé */
+        .seo-text { max-width: 728px; margin-top: 30px; text-align: center; color: #64748b; font-size: 0.9rem; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <!-- Bloco de Anúncio Superior (Leaderboard 728x90) -->
+    <div class="ad-top">
+        <!-- Cole aqui o código do bloco de anúncio do AdSense/Adsterra -->
+        Advertisement Space
+    </div>
+
+    <!-- Interface da Ferramenta -->
+    <main class="main-container">
+        <div class="display" id="display">00:00:00.00</div>
+        <div class="controls">
+            <button class="btn-start" id="startBtn">Start</button>
+            <button class="btn-stop" id="stopBtn">Stop</button>
+            <button class="btn-reset" id="resetBtn">Reset</button>
+        </div>
+    </main>
+
+    <!-- Bloco de Anúncio Inferior (Retângulo 728x250 ou 336x280) -->
+    <div class="ad-bottom">
+        <!-- Cole aqui o código do bloco de anúncio do AdSense/Adsterra -->
+        Advertisement Space
+    </div>
+
+    <!-- Texto Curto de SEO para ajudar o Google a entender o site -->
+    <footer class="seo-text">
+        <p><strong>Free Stopwatch</strong> is a clean, fast, and highly accurate online timer designed for everyday use. Whether you need to track your workout intervals, study sessions (Pomodoro), cooking times, or business tasks, our browser-based stopwatch provides instant precision with zero lag.</p>
+    </footer>
+
+    <!-- Lógica do Cronômetro Ultra Precisa em JavaScript -->
+    <script>
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval;
+
+        const display = document.getElementById('display');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function formatTime(time) {
+            let diffInHrs = time / 3600000;
+            let hh = Math.floor(diffInHrs);
+
+            let diffInMin = (diffInHrs - hh) * 60;
+            let mm = Math.floor(diffInMin);
+
+            let diffInSec = (diffInMin - mm) * 60;
+            let ss = Math.floor(diffInSec);
+
+            let diffInMs = (diffInSec - ss) * 100;
+            let ms = Math.floor(diffInMs);
+
+            let formattedHH = hh.toString().padStart(2, '0');
+            let formattedMM = mm.toString().padStart(2, '0');
+            let formattedSS = ss.toString().padStart(2, '0');
+            let formattedMS = ms.toString().padStart(2, '0');
+
+            return `${formattedHH}:${formattedMM}:${formattedSS}.${formattedMS}`;
+        }
+
+        startBtn.addEventListener('click', () => {
+            startTime = Date.now() - elapsedTime;
+            timerInterval = setInterval(() => {
+                elapsedTime = Date.now() - startTime;
+                display.textContent = formatTime(elapsedTime);
+            }, 10); // Atualiza a cada 10 milissegundos para precisão visual
+            
+            startBtn.style.display = 'none';
+            stopBtn.style.display = 'block';
+        });
+
+        stopBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            startBtn.style.display = 'block';
+            stopBtn.style.display = 'none';
+        });
+
+        resetBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            display.textContent = "00:00:00.00";
+            startBtn.style.display = 'block';
+            stopBtn.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
