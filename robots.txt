@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /privacy.htm
+
+Sitemap: https://freestopwatch.net
